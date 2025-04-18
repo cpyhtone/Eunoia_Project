@@ -1,0 +1,225 @@
+import { useState, useEffect, useRef } from 'react'
+import { Button } from "/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "/components/ui/card"
+import { Input } from "/components/ui/input"
+import { Play, Power, RotateCw, Plus, Trash, Server, Check, X, Terminal } from "lucide-react"
+
+export default function ReactEmulator() {
+  // Emulator state
+  const [isRunning, setIsRunning] = useState(false)
+  const [isConnected, setIsConnected] = useState(false)
+  const [terminalOutput, setTerminalOutput] = useState<string[]>([])
+  const terminalEndRef = useRef<HTMLDivElement>(null)
+
+  // Library management
+  const [libraries, setLibraries] = useState<string[]>([])
+  const [newLibrary, setNewLibrary] = useState('')
+
+  // Server connection
+  const [serverUrl, setServerUrl] = useState('http://localhost:3000')
+
+  // Auto-scroll terminal to bottom
+  useEffect(() => {
+    terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [terminalOutput])
+
+  const toggleEmulator = () => {
+    if (!isRunning) {
+      // Start the emulator
+      setIsRunning(true)
+      setTerminalOutput(prev => [
+        ...prev,
+        '> Starting React Emulator v1.0.0',
+        '> Initializing components...',
+        '> Loading libraries...',
+        ...libraries.map(lib => `> [LOAD] ${lib}`),
+        '> System ready',
+        '> Type "help" for available commands'
+      ])
+    } else {
+      // Stop the emulator
+      setIsRunning(false)
+      addTerminalLine('> Shutting down emulator...')
+    }
+  }
+
+  const resetEmulator = () => {
+    setIsRunning(false)
+    setTerminalOutput([])
+  }
+
+  const toggleConnection = () => {
+    if (!isConnected) {
+      setIsConnected(true)
+      addTerminalLine(`> Connecting to ${serverUrl}...`)
+      addTerminalLine('> Connection established')
+    } else {
+      setIsConnected(false)
+      addTerminalLine('> Disconnecting from server...')
+      addTerminalLine('> Connection terminated')
+    }
+  }
+
+  const addLibrary = () => {
+    if (newLibrary.trim() && !libraries.includes(newLibrary.trim())) {
+      setLibraries([...libraries, newLibrary.trim()])
+      if (isRunning) {
+        addTerminalLine(`> [ADD] Library "${newLibrary.trim()}" installed`)
+      }
+      setNewLibrary('')
+    }
+  }
+
+  const removeLibrary = (libraryToRemove: string) => {
+    setLibraries(libraries.filter(lib => lib !== libraryToRemove))
+    if (isRunning) {
+      addTerminalLine(`> [REMOVE] Library "${libraryToRemove}" uninstalled`)
+    }
+  }
+
+  const addTerminalLine = (line: string) => {
+    setTerminalOutput(prev => [...prev, line])
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50 p-4">
+      <div className="max-w-4xl mx-auto space-y-6">
+        <h1 className="text-3xl font-bold text-center">React Emulator</h1>
+
+        {/* Emulator Interface */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Terminal className="w-5 h-5" />
+              Terminal Interface
+            </CardTitle>
+            <CardDescription>Control the emulator state</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="bg-black text-green-400 font-mono rounded-lg p-4 h-64 overflow-y-auto">
+              {terminalOutput.length > 0 ? (
+                terminalOutput.map((line, index) => (
+                  <div key={index} className="mb-1">{line}</div>
+                ))
+              ) : (
+                <div className="h-full flex items-center justify-center text-gray-400">
+                  Emulator not running
+                </div>
+              )}
+              <div ref={terminalEndRef} />
+            </div>
+          </CardContent>
+          <CardFooter className="flex justify-center gap-4">
+            <Button 
+              variant={isRunning ? 'destructive' : 'default'} 
+              onClick={toggleEmulator}
+              className="gap-2"
+            >
+              <Power className="w-4 h-4" />
+              {isRunning ? 'Stop' : 'Start'}
+            </Button>
+            <Button 
+              variant="outline" 
+              onClick={resetEmulator}
+              className="gap-2"
+            >
+              <RotateCw className="w-4 h-4" />
+              Reset
+            </Button>
+          </CardFooter>
+        </Card>
+
+        {/* Library Management */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Plus className="w-5 h-5" />
+              Library Management
+            </CardTitle>
+            <CardDescription>Add and manage libraries</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex gap-2 mb-4">
+              <Input 
+                value={newLibrary} 
+                onChange={(e) => setNewLibrary(e.target.value)} 
+                placeholder="Enter library name" 
+              />
+              <Button onClick={addLibrary} className="gap-2">
+                <Plus className="w-4 h-4" />
+                Add
+              </Button>
+            </div>
+            {libraries.length > 0 ? (
+              <div className="space-y-2">
+                {libraries.map((library) => (
+                  <div key={library} className="flex items-center justify-between p-2 bg-gray-100 rounded">
+                    <span className="font-mono">{library}</span>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      onClick={() => removeLibrary(library)}
+                    >
+                      <Trash className="w-4 h-4 text-red-500" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center text-gray-500 py-4">
+                No libraries added yet
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Server Connection */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Server className="w-5 h-5" />
+              Server Connection
+            </CardTitle>
+            <CardDescription>Connect to a server</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex gap-2 mb-4">
+              <Input 
+                value={serverUrl} 
+                onChange={(e) => setServerUrl(e.target.value)} 
+                placeholder="Server URL" 
+              />
+              <Button 
+                variant={isConnected ? 'destructive' : 'default'} 
+                onClick={toggleConnection}
+                className="gap-2"
+              >
+                {isConnected ? (
+                  <>
+                    <X className="w-4 h-4" />
+                    Disconnect
+                  </>
+                ) : (
+                  <>
+                    <Check className="w-4 h-4" />
+                    Connect
+                  </>
+                )}
+              </Button>
+            </div>
+            <div className={`p-3 rounded flex items-center gap-2 ${isConnected ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+              {isConnected ? (
+                <Check className="w-5 h-5" />
+              ) : (
+                <X className="w-5 h-5" />
+              )}
+              <span>
+                {isConnected ? `Connected to ${serverUrl}` : 'Disconnected'}
+              </span>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  )
+}
