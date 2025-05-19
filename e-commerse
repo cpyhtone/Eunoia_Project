@@ -1,0 +1,343 @@
+import { useState } from 'react'
+import { Home, Search, Menu, User, Settings, Bell, Calendar, Plus, Trash, Edit } from 'lucide-react'
+import { Button } from "/components/ui/button"
+import { Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter } from "/components/ui/card"
+import { Input } from "/components/ui/input"
+import { Label } from "/components/ui/label"
+import { Avatar, AvatarFallback, AvatarImage } from "/components/ui/avatar"
+
+export default function EcommerceDashboard() {
+  const [activeTab, setActiveTab] = useState('dashboard')
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [products, setProducts] = useState([
+    { id: 1, name: 'Organic Cotton T-Shirt', price: 29.99, stock: 42 },
+    { id: 2, name: 'Wireless Headphones', price: 99.99, stock: 15 },
+    { id: 3, name: 'Stainless Steel Water Bottle', price: 24.95, stock: 30 }
+  ])
+  const [sales, setSales] = useState([
+    { id: 1, productId: 1, date: '2023-05-15', quantity: 2, revenue: 59.98 },
+    { id: 2, productId: 2, date: '2023-05-16', quantity: 1, revenue: 99.99 },
+    { id: 3, productId: 3, date: '2023-05-17', quantity: 3, revenue: 74.85 }
+  ])
+  const [newProduct, setNewProduct] = useState({ name: '', price: '', stock: '' })
+  const [editingProduct, setEditingProduct] = useState<null | typeof products[0]>(null)
+
+  const handleLogin = () => setIsLoggedIn(true)
+  const handleLogout = () => setIsLoggedIn(false)
+
+  const addProduct = () => {
+    if (newProduct.name && newProduct.price && newProduct.stock) {
+      const product = {
+        id: products.length + 1,
+        name: newProduct.name,
+        price: parseFloat(newProduct.price),
+        stock: parseInt(newProduct.stock)
+      }
+      setProducts([...products, product])
+      setNewProduct({ name: '', price: '', stock: '' })
+    }
+  }
+
+  const deleteProduct = (id: number) => {
+    setProducts(products.filter(product => product.id !== id))
+    setSales(sales.filter(sale => sale.productId !== id))
+  }
+
+  const updateProduct = () => {
+    if (editingProduct) {
+      setProducts(products.map(p => 
+        p.id === editingProduct.id ? editingProduct : p
+      ))
+      setEditingProduct(null)
+    }
+  }
+
+  if (!isLoggedIn) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle className="text-2xl">Login</CardTitle>
+            <CardDescription>Enter your credentials to access the dashboard</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="username">Username</Label>
+                <Input id="username" placeholder="admin" />
+              </div>
+              <div>
+                <Label htmlFor="password">Password</Label>
+                <Input id="password" type="password" placeholder="23xx13xx" />
+              </div>
+            </div>
+          </CardContent>
+          <CardFooter>
+            <Button className="w-full" onClick={handleLogin}>Sign In</Button>
+          </CardFooter>
+        </Card>
+      </div>
+    )
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <header className="bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+          <div className="flex items-center space-x-4">
+            <Button variant="ghost" size="icon">
+              <Menu className="h-5 w-5" />
+            </Button>
+            <h1 className="text-xl font-bold">E-Commerce Dashboard</h1>
+          </div>
+          <div className="flex items-center space-x-4">
+            <Button variant="ghost" size="icon">
+              <Bell className="h-5 w-5" />
+            </Button>
+            <Avatar>
+              <AvatarFallback>AD</AvatarFallback>
+            </Avatar>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Navigation Tabs */}
+        <div className="flex border-b mb-8">
+          <Button 
+            variant={activeTab === 'dashboard' ? 'secondary' : 'ghost'} 
+            onClick={() => setActiveTab('dashboard')}
+          >
+            Dashboard
+          </Button>
+          <Button 
+            variant={activeTab === 'inventory' ? 'secondary' : 'ghost'} 
+            onClick={() => setActiveTab('inventory')}
+          >
+            Inventory
+          </Button>
+          <Button 
+            variant={activeTab === 'sales' ? 'secondary' : 'ghost'} 
+            onClick={() => setActiveTab('sales')}
+          >
+            Sales
+          </Button>
+          <Button 
+            variant="ghost" 
+            className="ml-auto" 
+            onClick={handleLogout}
+          >
+            Logout
+          </Button>
+        </div>
+
+        {/* Dashboard Tab */}
+        {activeTab === 'dashboard' && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Total Products</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-3xl font-bold">{products.length}</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Total Sales</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-3xl font-bold">{sales.length}</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Total Revenue</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-3xl font-bold">
+                  ${sales.reduce((sum, sale) => sum + sale.revenue, 0).toFixed(2)}
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {/* Inventory Tab */}
+        {activeTab === 'inventory' && (
+          <div className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Add New Product</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <Label htmlFor="product-name">Product Name</Label>
+                    <Input 
+                      id="product-name" 
+                      value={newProduct.name}
+                      onChange={(e) => setNewProduct({...newProduct, name: e.target.value})}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="product-price">Price ($)</Label>
+                    <Input 
+                      id="product-price" 
+                      type="number" 
+                      value={newProduct.price}
+                      onChange={(e) => setNewProduct({...newProduct, price: e.target.value})}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="product-stock">Stock</Label>
+                    <Input 
+                      id="product-stock" 
+                      type="number" 
+                      value={newProduct.stock}
+                      onChange={(e) => setNewProduct({...newProduct, stock: e.target.value})}
+                    />
+                  </div>
+                </div>
+              </CardContent>
+              <CardFooter>
+                <Button onClick={addProduct}>
+                  <Plus className="mr-2 h-4 w-4" /> Add Product
+                </Button>
+              </CardFooter>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Product Inventory</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="overflow-x-auto">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {products.map((product) => (
+                        <tr key={product.id}>
+                          <td className="px-6 py-4 whitespace-nowrap">{product.name}</td>
+                          <td className="px-6 py-4 whitespace-nowrap">${product.price.toFixed(2)}</td>
+                          <td className="px-6 py-4 whitespace-nowrap">{product.stock}</td>
+                          <td className="px-6 py-4 whitespace-nowrap space-x-2">
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              onClick={() => setEditingProduct(product)}
+                            >
+                              <Edit className="mr-2 h-4 w-4" /> Edit
+                            </Button>
+                            <Button 
+                              variant="destructive" 
+                              size="sm"
+                              onClick={() => deleteProduct(product.id)}
+                            >
+                              <Trash className="mr-2 h-4 w-4" /> Delete
+                            </Button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Edit Product Modal */}
+            {editingProduct && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+                <Card className="w-full max-w-md">
+                  <CardHeader>
+                    <CardTitle>Edit Product</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="edit-name">Product Name</Label>
+                        <Input 
+                          id="edit-name" 
+                          value={editingProduct.name}
+                          onChange={(e) => setEditingProduct({...editingProduct, name: e.target.value})}
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="edit-price">Price ($)</Label>
+                        <Input 
+                          id="edit-price" 
+                          type="number" 
+                          value={editingProduct.price}
+                          onChange={(e) => setEditingProduct({...editingProduct, price: parseFloat(e.target.value)})}
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="edit-stock">Stock</Label>
+                        <Input 
+                          id="edit-stock" 
+                          type="number" 
+                          value={editingProduct.stock}
+                          onChange={(e) => setEditingProduct({...editingProduct, stock: parseInt(e.target.value)})}
+                        />
+                      </div>
+                    </div>
+                  </CardContent>
+                  <CardFooter className="space-x-2">
+                    <Button onClick={updateProduct}>Save Changes</Button>
+                    <Button variant="outline" onClick={() => setEditingProduct(null)}>Cancel</Button>
+                  </CardFooter>
+                </Card>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Sales Tab */}
+        {activeTab === 'sales' && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Sales History</CardTitle>
+              <CardDescription>Recent transactions and revenue</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Revenue</th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {sales.map((sale) => {
+                      const product = products.find(p => p.id === sale.productId)
+                      return (
+                        <tr key={sale.id}>
+                          <td className="px-6 py-4 whitespace-nowrap">{sale.date}</td>
+                          <td className="px-6 py-4 whitespace-nowrap">{product?.name || 'Unknown Product'}</td>
+                          <td className="px-6 py-4 whitespace-nowrap">{sale.quantity}</td>
+                          <td className="px-6 py-4 whitespace-nowrap">${sale.revenue.toFixed(2)}</td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+      </main>
+    </div>
+  )
+}
