@@ -1,0 +1,37 @@
+struktur implementasi 
+User 1 --- * Service
+Service 1 --- * Deployment
+
+# Schema Dokumentasi Aplikasi
+
+## User
+| Field      | Type       | Description                                  | Required | Constraints            |
+|------------|------------|----------------------------------------------|----------|------------------------|
+| id         | UUID       | ID unik pengguna                              | yes      | Primary Key           |
+| username   | string     | Nama pengguna / nama login                     | yes      | Unique                |
+| password   | string     | Password hashed                                | yes      |                       |
+| email      | string     | Alamat email                                 | yes      | Unique, Email Valid   |
+| role       | string     | Role pengguna (admin, client)                  | yes      | Enum: ['admin','client'] |
+| created_at | timestamp  | Waktu pembuatan akun                          | yes      | Default saat create   |
+| updated_at | timestamp  | Waktu terakhir update                        | yes      | Otomatis diupdate    |
+
+## Service
+| Field            | Type   | Description                         | Required | Constraints            |
+|------------------|--------|-------------------------------------|----------|------------------------|
+| id               | UUID   | ID layanan                           | yes      | Primary Key           |
+| user_id          | UUID   | ID pengguna pemilik layanan          | yes      | Foreign Key ke User   |
+| service_name     | string | Nama layanan                         | yes      |                       |
+| status           | string | Status layanan ('active', 'pending', 'stopped') | yes      | Enum                |
+| created_at       | timestamp | Waktu pembuatan layanan            | yes      |                       |
+| updated_at       | timestamp | Waktu terakhir update layanan     | yes      |                       |
+
+## Deployment
+| Field            | Type      | Description                              | Required | Constraints            |
+|------------------|-----------|------------------------------------------|----------|------------------------|
+| id               | UUID      | ID deployment                            | yes      | Primary Key           |
+| service_id       | UUID      | ID layanan yang di-deploy                | yes      | Foreign Key ke Service |
+| deployment_time  | timestamp | waktu saat deployment dilakukan           | yes      |                       |
+| deployment_status| string    | status deployment ('success', 'failed') | yes      | Enum                 |
+| config           | object    | konfigurasi deployment (opsional)        | no       |                       |
+| created_at       | timestamp | waktu pembuatan deployment               | yes      |                       |
+| updated_at       | timestamp | waktu terakhir update                   | yes      |                       |
