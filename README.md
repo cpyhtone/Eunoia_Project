@@ -6,8 +6,45 @@
 
 *   **1.1 Ringkasan Proyek:**
     *   **Nama Proyek:** Eunoia Project
-    *   **Tujuan Proyek:** [Jelaskan tujuan utama proyek. Contoh: "Untuk mengembangkan aplikasi mobile yang membantu pengguna mengelola jurnal harian, refleksi diri, dan melacak suasana hati mereka secara positif."]
-    *   **Deskripsi Singkat:** [Deskripsikan secara singkat apa yang akan dilakukan aplikasi ini. Contoh: "Eunoia adalah aplikasi jurnal pribadi yang berfokus pada peningkatan kesehatan mental dan kesejahteraan pengguna. Aplikasi ini menyediakan fitur jurnal, pelacak suasana hati, pengingat, dan fitur refleksi diri."]
+    *   **Tujuan Proyek:** [Jelaskan tujuan utama proyek. Contoh: "Untuk mengembangkan aplikasi mobile yang membantu pengguna mengelola aplikasi]
+    *   **Deskripsi Singkat:** [Deskripsikan secara singkat apa yang akan dilakukan aplikasi ini. Contoh: "Eunoia Adalah Proyek Startup yang meliputi
+    *   ### 1. **Aplikasi Manajemen Bisnis**
+- **CRM (Customer Relationship Management):** Untuk mengelola relasi pelanggan, prospek, dan penjualan.
+- **ERP (Enterprise Resource Planning):** Untuk mengatur keuangan, inventaris, dan operasional bisnis secara terintegrasi.
+- **Aplikasi Akuntansi:** Memudahkan pencatatan keuangan dan laporan keuangan otomatis.
+
+### 2. **Aplikasi E-commerce**
+- Platform jual beli online khusus niche tertentu.
+- Aplikasi pengelolaan toko dan stok barang bagi penjual kecil dan menengah.
+
+### 3. **Aplikasi Pembelajaran dan Kursus Online**
+- Platform kursus digital untuk berbagai bidang.
+- Aplikasi workshop dan webinar interaktif.
+
+### 4. **Aplikasi Performa device**
+- Telemedicine atau konsultasi dokter online.
+- Aplikasi tracking kebugaran dan diet.
+
+### 5. **Aplikasi Transportasi dan Logistik dan material**
+- Ride-hailing seperti Gojek, Grab.
+- Jasa pengiriman barang dan logistik.
+
+### 6. **Aplikasi Sosial dan Komunitas**
+- Platform jejaring sosial niche tertentu.
+- Forum diskusi dan jaringan profesional.
+
+### 7. **Aplikasi Ketenagakerjaan dan Freelance**
+- Marketplace jasa freelance.
+- Aplikasi pencarian pekerjaan sesuai keahlian.
+
+### 8. **Aplikasi Digital Marketing**
+- Tools otomatisasi media sosial.
+- Platform analitik dan laporan performa kampanye.
+
+### 9. **Aplikasi IoT dan Smart Home**
+- Pengendalian perangkat rumah pintar.
+- Monitoring dan keamanan rumah dari jarak jauh.
+"]
     *   **Versi Dokumen:** 1.0
     *   **Tanggal Pembuatan:** [Tanggal pembuatan dokumen]
     *   **Penulis:** [Nama penulis dokumen]
