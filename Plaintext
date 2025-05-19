@@ -1,0 +1,98 @@
+## 1. **Langkah-langkah Membuat Schema Aplikasi**
+
+### a. Tentukan **Entitas Utama** (data utama)
+- Pengguna (User)
+- Layanan (Service)
+- Deployment / Layanan Deployment (Deployments)
+
+### b. Tentukan **atribut** tiap entitas
+Contohnya:
+
+- **User**
+  - id (UUID/auto-increment)
+  - username
+  - password (hashed)
+  - email
+  - role (admin, client)
+  - created_at
+  - updated_at
+
+- **Service**
+  - id
+  - user_id (relasi ke User)
+  - service_name
+  - status (active, pending, stopped)
+  - created_at
+  - updated_at
+
+- **Deployment**
+  - id
+  - service_id (relasi ke Service)
+  - deployment_time
+  - deployment_status
+  - config (opsional, berisi konfigurasi deployment)
+  - created_at
+  - updated_at
+
+---
+
+## 2. **Contoh Schema (JSON atau UML)**
+
+### Contoh Schema dalam format JSON
+
+```json
+{
+  "User": {
+    "id": "UUID",
+    "username": "string",
+    "password": "string",
+    "email": "string",
+    "role": "string",
+    "created_at": "timestamp",
+    "updated_at": "timestamp"
+  },
+  "Service": {
+    "id": "UUID",
+    "user_id": "UUID",
+    "service_name": "string",
+    "status": "string",
+    "created_at": "timestamp",
+    "updated_at": "timestamp"
+  },
+  "Deployment": {
+    "id": "UUID",
+    "service_id": "UUID",
+    "deployment_time": "timestamp",
+    "deployment_status": "string",
+    "config": "object",
+    "created_at": "timestamp",
+    "updated_at": "timestamp"
+  }
+}
+```
+
+---
+
+## 3. **Membuat Schema Diagram (UML Class Diagram)**
+
+Gunakan tools seperti:
+- Draw.io
+- Lucidchart
+- Diagrams.net
+
+Contoh struktur hubungan:
+```
+User 1 --- * Service
+Service 1 --- * Deployment
+```
+
+---
+
+## 4. **Dokumentasi Schema**
+
+Buat dokumen markdown atau dokumen PDF yang mencantumkan detail entitas dan atribut:
+
+```markdown
+# Schema Dokumentasi Aplikasi
+
+example in schema.JSON
