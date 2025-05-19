@@ -1,0 +1,28 @@
+{
+  "User": {
+    "id": "UUID",
+    "username": "string",
+    "password": "string",
+    "email": "string",
+    "role": "string",
+    "created_at": "timestamp",
+    "updated_at": "timestamp"
+  },
+  "Service": {
+    "id": "UUID",
+    "user_id": "UUID",
+    "service_name": "string",
+    "status": "string",
+    "created_at": "timestamp",
+    "updated_at": "timestamp"
+  },
+  "Deployment": {
+    "id": "UUID",
+    "service_id": "UUID",
+    "deployment_time": "timestamp",
+    "deployment_status": "string",
+    "config": "object",
+    "created_at": "timestamp",
+    "updated_at": "timestamp"
+  }
+}
